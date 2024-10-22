@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>HTML5 Histogram</title>
+  </head>
+  <body>
+    <canvas id="canvas-histogram"> Canvas is not supported </canvas>
+    <canvas id="canvas-Image"> Canvas is not supported </canvas>
+    <script>
+      "use strict";
+      const canvasHistogram = document.querySelector("#canvas-histogram");
+      const canvasImage = document.querySelector("#canvas-Image");
+
+      document.addEventListener("dragover", (e) => {
+        e.preventDefault(); // e nevoie cand facem drag and drop sa nu se deschida fisierul in browser
+      });
+
+      document.addEventListener("drop", (e) => {
+        e.preventDefault();
+        const files = e.dataTransfer.files;
+        if (files.length > 0) {
+          const file = files[0];
+        }
+      });
+    </script>
+  </body>
+</html>
