@@ -1,11 +1,11 @@
-class BarChart {
+export class BarChart {
   /**
    * The canvas on which the bar chart will be displayed
    */
   #canvas;
 
   /**
-   * Constructs a new instance
+   * Construts a new instance
    * @param {HTMLCanvasElement} canvas
    */
   constructor(canvas) {
@@ -19,12 +19,17 @@ class BarChart {
    */
   draw(values, options) {
     const context = this.#canvas.getContext("2d");
+
     context.clearRect(0, 0, this.#canvas.width, this.#canvas.height);
 
     const barWidth = this.#canvas.width / values.length;
 
     const maxValue = Math.max(...values);
     const ratio = this.#canvas.height / maxValue;
+
+    context.lineWidth = 2;
+    context.strokeStyle = "orange";
+    //ontext.textAlign = 'center';
 
     for (let i = 0; i < values.length; i++) {
       const barX = i * barWidth;
@@ -34,19 +39,19 @@ class BarChart {
       context.fillStyle = "red";
       context.fillRect(barX + barWidth / 4, barY, barWidth / 2, barHeight);
 
-      context.strokeStyle = "orange";
-      context.lineWidth = 2;
       if (options.drawOutline)
         context.strokeRect(barX + barWidth / 4, barY, barWidth / 2, barHeight);
 
-      context.fillStyle = "black";
-      context.font = "16px Times New Roman";
-      context.textAlign = "center";
+      if (options.drawLabels) {
+        context.fillStyle = "white";
+        //context.fillText(values[i], barX + barWidth / 2, barY + 20);
 
-      const textX = barX + barWidth / 2;
-      const textY = barY + 20;
-
-      if (options.drawLabels) context.fillText(values[i], textX, textY);
+        context.fillText(
+          values[i],
+          barX + barWidth / 2 - context.measureText(values[i]).width / 2,
+          barY + 20
+        );
+      }
     }
   }
 }
