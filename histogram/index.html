@@ -1,75 +1,52 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>HTML5 - Histogram</title>
-    <style>
-      body {
-        margin: 0;
-        padding: 0;
-      }
-      canvas {
-        width: 100vw;
-        height: 400px;
-        display: block;
-      }
-    </style>
-  </head>
-  <body>
-    <canvas id="canvas-Histogram"> Canvas is not supported </canvas>
-    <canvas id="canvas-Image"> Canvas is not supported </canvas>
-
+</head>
+<body>
+    <canvas id="canvas-Histogram">
+        Canvas is not supported
+    </canvas>
+    
+    <canvas id="canvas-Image" style="max-width:100vw;height:400px">
+        Canvas is not supported
+    </canvas>
     <script type="module">
-      import { BarChart } from "./canvas-bar-chart-library.js";
-      const canvasHistogram = document.querySelector("#canvas-Histogram");
-      const canvasImage = document.querySelector("#canvas-Image");
+        import {BarChart} from './canvas-bar-chart-library.js'
 
-      function resizeCanvas() {
-        const windowWidth = window.innerWidth;
-        const maxHeight = 400;
+        const canvasHistogram = document.querySelector('#canvas-Histogram');
+        const canvasImage = document.querySelector('#canvas-Image');
 
-        canvasHistogram.width = windowWidth;
-        canvasHistogram.height = maxHeight;
+        document.addEventListener('dragover', (e)=>{
+            e.preventDefault();
+        });
 
-        canvasImage.width = windowWidth;
-        canvasImage.height = maxHeight;
-      }
+        document.addEventListener('drop', (e)=>{
+            e.preventDefault();
 
-      resizeCanvas();
+            const files = e.dataTransfer.files;
+            if (files.length > 0){
+                const file = files[0];
+                //console.log(file);
 
-      window.addEventListener("resize", resizeCanvas);
+                const reader = new FileReader();
+                reader.addEventListener('load', ()=>{
+                    const dataURL = reader.result;
+                    const img = document.createElement('img');
+                    img.addEventListener('load', ()=>{
+                        canvasImage.width = img.naturalWidth;
+                        canvasImage.height = img.naturalHeight;
+                        const context = canvasImage.getContext('2d');
+                        context.drawImage(img, 0, 0);
+                    });
+                    img.src = dataURL;
+                });
+                reader.readAsDataURL(file);
+            }
+        });
 
-      document.addEventListener("dragover", (e) => {
-        e.preventDefault();
-      });
-
-      document.addEventListener("drop", (e) => {
-        e.preventDefault();
-
-        const files = e.dataTransfer.files;
-        if (files.length > 0) {
-          const file = files[0];
-
-          const reader = new FileReader();
-
-          reader.addEventListener("load", () => {
-            const dataURL = reader.result;
-            const img = document.createElement("img");
-            img.addEventListener("load", () => {
-              const context = canvasImage.getContext("2d");
-
-              canvasImage.width = img.naturalWidth;
-              canvasImage.height = img.naturalHeight;
-
-              context.drawImage(img, 0, 0);
-            });
-            img.src = dataURL;
-          });
-
-          reader.readAsDataURL(file);
-        }
-      });
     </script>
-  </body>
+</body>
 </html>
